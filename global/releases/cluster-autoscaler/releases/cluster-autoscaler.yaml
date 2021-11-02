@@ -1,0 +1,21 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: cluster-autoscaler
+  namespace: cluster-autoscaler
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: cluster-autoscaler
+  chart:
+    repository: https://kubernetes.github.io/autoscaler
+    name: cluster-autoscaler
+    version: 9.9.0
+  values:
+    autoDiscovery:
+      clusterName: <<EKS cluster name>>
+    image:
+      repository: us.gcr.io/k8s-artifacts-prod/autoscaling/cluster-autoscaler
+      tag: v1.19.1
+    rbac:
+      create: true

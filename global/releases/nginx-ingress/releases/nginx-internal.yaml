@@ -1,0 +1,27 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: nginx-internal
+  namespace: nginx
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: nginx-internal
+  chart:
+    repository: https://kubernetes.github.io/ingress-nginx
+    name: ingress-nginx
+    version: 2.11.1
+  values:
+    controller:
+      ingressClass: nginx-internal
+      metrics:
+        enabled: false
+        serviceMonitor:
+          enabled: false
+      service:
+        annotations:
+          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+          service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "60"
+          service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+          service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+          service.beta.kubernetes.io/aws-load-balancer-type: nlb
